@@ -1,15 +1,27 @@
 #include "snake.h"
 #include "sdl_check.h"
 
+
 Snake::Snake()
  {
      auto res = SDL_Init(SDL_INIT_EVERYTHING);
-  SDL_CHECK(res == 0, "SDL_Init");
-  SDL_CreateWindowAndRenderer(Width, Height, SDL_WINDOW_BORDERLESS, &window, &renderer);
-  SDL_CHECK(window, "SDL_CreateWindowAndRenderer");
-  SDL_CHECK(renderer, "SDL_CreateWindowAndRenderer");
-  SDL_SetWindowPosition(window, 65, 126);
+     SDL_CHECK(res == 0, "SDL_Init");
+     SDL_CreateWindowAndRenderer(Width, Height, SDL_WINDOW_BORDERLESS, &window, &renderer);
+     SDL_CHECK(window, "SDL_CreateWindowAndRenderer");
+     SDL_CHECK(renderer, "SDL_CreateWindowAndRenderer");
+     //SDL_Surface* LoadImage(std::string "background.png")
+
+     SDL_SetWindowPosition(window, 65, 65);
+
+     auto backgroundSurface = IMG_Load("background.png");
+     SDL_CHECK(backgroundSurface, "Failed to load background image");
+     backgroundTexture = SDL_CreateTextureFromSurface(renderer, backgroundSurface);
+     SDL_CHECK(backgroundTexture, "Failed to create background texture");
+     SDL_FreeSurface(backgroundSurface);
+     SDL_RenderCopy(renderer, backgroundTexture, NULL, NULL);
+
      auto surface = SDL_LoadBMP("sprites.bmp");
+     //auto surface = SDL_LoadBMP("Garden-Background.png");
      SDL_CHECK(surface, "SDL_LoadBMP(\"sprites.bmp\")");
      sprites = SDL_CreateTextureFromSurface(renderer, surface);
      SDL_CHECK(sprites, "SDL_CreateTextureFromSurface");
@@ -19,7 +31,23 @@ Snake::Snake()
      segmentsList.push_back(std::make_pair(5, 6));
      segmentsList.push_back(std::make_pair(4, 6));
      generateFruit();
+
+     // Tạo font
+    font = TTF_OpenFont("font.ttf", 24); // Thay thế "font.ttf" bằng đường dẫn tới font của bạn
+
+    // Tạo texture cho nút "Play"
+    SDL_Surface* playButtonSurface = TTF_RenderText_Solid(font, "Play", {255, 255, 255}); // Màu trắng
+    playButtonTexture = SDL_CreateTextureFromSurface(renderer, playButtonSurface);
+    SDL_FreeSurface(playButtonSurface);
+    playButtonRect = {Width / 2 - 50, Height / 2 - 50, 100, 50}; // Đặt vị trí và kích thước cho nút "Play"
+
+    // Tạo texture cho nút "Exit"
+    SDL_Surface* exitButtonSurface = TTF_RenderText_Solid(font, "Exit", {255, 255, 255}); // Màu trắng
+    exitButtonTexture = SDL_CreateTextureFromSurface(renderer, exitButtonSurface);
+    SDL_FreeSurface(exitButtonSurface);
+    exitButtonRect = {Width / 2 - 50, Height / 2 + 50, 100, 50}; // Đặt vị trí và kích thước cho nút "Exit"
 }
+
 void Snake::generateFruit()
 {
   auto done = false;
@@ -44,53 +72,92 @@ Snake::~Snake()
     SDL_DestroyWindow(window);
     SDL_Quit();
 }
+void Snake::drawMenu() {
+    // Vẽ nút "Play"
+    SDL_RenderCopy(renderer, playButtonTexture, NULL, &playButtonRect);
+
+    // Vẽ nút "Exit"
+    SDL_RenderCopy(renderer, exitButtonTexture, NULL, &exitButtonRect);
+}
+void Snake::handleMenuEvent(const SDL_Event &event) {
+    if (event.type == SDL_MOUSEBUTTONDOWN) {
+        int mouseX, mouseY;
+        SDL_GetMouseState(&mouseX, &mouseY);
+        if (mouseX >= playButtonRect.x && mouseX <= playButtonRect.x + playButtonRect.w &&
+            mouseY >= playButtonRect.y && mouseY <= playButtonRect.y + playButtonRect.h) {
+            // Xử lý khi người chơi nhấp vào nút "Play"
+            // Ví dụ: bắt đầu trò chơi bằng cách gọi một hàm startGame()
+        } else if (mouseX >= exitButtonRect.x && mouseX <= exitButtonRect.x + exitButtonRect.w &&
+                   mouseY >= exitButtonRect.y && mouseY <= exitButtonRect.y + exitButtonRect.h) {
+            // Xử lý khi người chơi nhấp vào nút "Exit"
+            // Ví dụ: thoát khỏi trò chơi bằng cách gọi một hàm quitGame()
+        }
+    }
+}
+
 int Snake::exec()
 {
      auto oldTick = SDL_GetTicks();
-  for (auto done = false; !done;)
-  {
-    SDL_Event e;
-    if (SDL_PollEvent(&e))
-    {
-      switch (e.type)
-      {
-      case SDL_KEYDOWN:
-        {
-          switch (e.key.keysym.sym)
-          {
-          case SDLK_UP:
-            dx = 0;
-            dy = -1;
-            break;
-          case SDLK_RIGHT:
-            dx = 1;
-            dy = 0;
-            break;
-          case SDLK_DOWN:
-            dx = 0;
-            dy = 1;
-            break;
-          case SDLK_LEFT:
-            dx = -1;
-            dy = 0;
-            break;
-          }
+    bool inMenu = true; // Biến để xác định liệu trò chơi đang ở trong menu hay không
+    while (inMenu) {
+        SDL_Event menuEvent;
+        while (SDL_PollEvent(&menuEvent)) {
+            handleMenuEvent(menuEvent); // Xử lý sự kiện cho menu
+            if (menuEvent.type == SDL_QUIT) {
+                inMenu = false; // Thoát khỏi menu nếu người chơi nhấp vào nút thoát cửa sổ
+            }
         }
-        break;
-      case SDL_QUIT:
-        done = true;
-        break;
-      }
+        SDL_RenderClear(renderer); // Xóa nền
+        drawMenu(); // Vẽ menu
+        SDL_RenderPresent(renderer); // Hiển thị lên cửa sổ
     }
-    SDL_SetRenderDrawColor(renderer, 0x00, 0x7f, 0x00, 0xff);
-    SDL_RenderClear(renderer);
-    auto currentTick = SDL_GetTicks();
-    for (auto t = oldTick; t < currentTick; ++t)
-      if (!tick())
+
+        //auto oldTick = SDL_GetTicks();
+         for (auto done = false; !done;)
+          {
+            SDL_Event e;
+            if (SDL_PollEvent(&e))
+          {
+             switch (e.type)
+              {
+                case SDL_KEYDOWN:
+               {
+                 switch (e.key.keysym.sym)
+                 {
+                   case SDLK_UP:
+                    dx = 0;
+                    dy = -1;
+                    break;
+                   case SDLK_RIGHT:
+                    dx = 1;
+                    dy = 0;
+                    break;
+                   case SDLK_DOWN:
+                    dx = 0;
+                    dy = 1;
+                    break;
+                   case SDLK_LEFT:
+                    dx = -1;
+                    dy = 0;
+                    break;
+                  }
+                 }
+                 break;
+          case SDL_QUIT:
+            done = true;
+            break;
+         }
+       }
+        //SDL_SetRenderDrawColor(renderer, 0x00, 0x7f, 0x00, 0xff);
+       SDL_RenderClear(renderer);
+
+       auto currentTick = SDL_GetTicks();
+       for (auto t = oldTick; t < currentTick; ++t)
+       if (!tick())
         return 1;
-    oldTick = currentTick;
-    draw();
-    SDL_RenderPresent(renderer);
+       oldTick = currentTick;
+       draw();
+      SDL_RenderPresent(renderer);
   }
     return 0;
 }
@@ -118,6 +185,8 @@ bool Snake::tick()
 
 void Snake::draw()
 {
+  SDL_RenderCopy(renderer, backgroundTexture, NULL, NULL);
+
   SDL_Rect src;
   src.x = 0;
   src.y = 0;
@@ -219,6 +288,7 @@ void Snake::draw()
     dest.x = 64 * segment.first;
     dest.y = 64 * segment.second;
     SDL_RenderCopyEx(renderer, sprites, &src, &dest, direction, nullptr, SDL_FLIP_NONE);
+
   }
   src.x = Fruit * 64;
   dest.x = fruitX * 64;
