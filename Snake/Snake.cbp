@@ -32,10 +32,16 @@
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 		</Compiler>
+		<Unit filename="BaseObject.cpp" />
+		<Unit filename="BaseObject.h" />
 		<Unit filename="main.cpp" />
+		<Unit filename="mainObject.cpp" />
+		<Unit filename="mainObject.h" />
 		<Unit filename="sdl_check.h" />
 		<Unit filename="snake.cpp" />
 		<Unit filename="snake.h" />
+		<Unit filename="textobject.cpp" />
+		<Unit filename="textobject.h" />
 		<Extensions>
 			<lib_finder disable_auto="1" />
 		</Extensions>
