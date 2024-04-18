@@ -21,8 +21,8 @@ public:
     static const auto Straight = 3;
     static const auto Head = 4;
     static const auto Fruit = 5;
-    const static auto Width = 1280;
-    const static auto Height = 720;
+    const static auto Width = 1260;
+    const static auto Height = 600;
 private:
   SDL_Window *window;
   SDL_Renderer *renderer;
