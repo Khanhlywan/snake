@@ -2,18 +2,75 @@
 #include "sdl_check.h"
 
 
-Point snake[100];
+Button::Button(int x, int y, int w, int h, std::string text) {
+  rect.x = x;
+  rect.y = y;
+  rect.w = w;
+  rect.h = h;
+  this->text = text;
 
-bool Snake::isEmpty(){
-	FILE *fp;
-	long size;
-	fp = fopen("highscore.txt","r");
-	if(fp){
-		fseek (fp, 0, SEEK_END);
-        size = ftell(fp);
-		fclose(fp);
-	}
-	return(size == 0);
+  font = TTF_OpenFont("font.ttf", 24);
+  if (!font) {
+    std::cerr << "Failed to load font" << std::endl;
+    return;
+  }
+
+  SDL_Surface *textSurface = TTF_RenderText_Solid(font, text.c_str(), {255, 255, 255});
+  if (!textSurface) {
+    std::cerr << "Failed to render text" << std::endl;
+    return;
+  }
+
+  texture = SDL_CreateTextureFromSurface(renderer, textSurface);
+  SDL_FreeSurface(textSurface);
+}
+void Button::draw(SDL_Renderer *renderer) {
+  SDL_RenderFillRect(renderer, &rect, {0, 0, 0});
+  SDL_RenderCopy(renderer, texture, NULL, &rect);
+}
+bool Button::isClicked(int mouseX, int mouseY) {
+  return mouseX >= rect.x && mouseX <= rect.x + rect.w &&
+         mouseY >= rect.y && mouseY <= rect.y + rect.h;
+}
+
+Menu::Menu() {
+  playButton = Button(Width / 4 - 50, Height / 2 - 30, 100, 60, "Play");
+  exitButton = Button(Width / 4 * 3 - 50, Height / 2 - 30, 100, 60, "Exit");
+
+  SDL_Surface *backgroundSurface = IMG_Load("menu.png");
+  if (!backgroundSurface) {
+    std::cerr << "Failed to load background image" << std::endl;
+    return;
+  }
+  backgroundTexture = SDL_CreateTextureFromSurface(renderer, backgroundSurface);
+  SDL_FreeSurface(backgroundSurface);
+}
+void Menu::draw(SDL_Renderer *renderer) {
+  SDL_RenderCopy(renderer, backgroundTexture, NULL, NULL);
+  playButton.draw(renderer);
+  exitButton.draw(renderer);
+}
+bool Menu::handleEvents(SDL_Event *event) {
+  switch (event->type) {
+    case SDL_MOUSEMOTION:
+      playButton.onMouseMove(event->motion.x, event->motion.y);
+      exitButton.onMouseMove(event->motion.x, event->motion.y);
+      break;
+    case SDL_MOUSEBUTTONDOWN:
+      if (event->button.button == SDL_BUTTON_LEFT) {
+        int mouseX = event->button.x;
+        int mouseY = event->button.y;
+        if (playButton.isClicked(mouseX, mouseY)) {
+          // Start the game! (Replace with your game logic)
+          return true; // Indicate game start
+        } else if (exitButton.isClicked(mouseX, mouseY)) {
+          // Exit the game! (Replace with exit logic)
+          return false; // Indicate game exit
+        }
+      }
+      break;
+  }
+  return false; // Continue showing the menu
 }
 
 
@@ -59,37 +116,6 @@ Snake::Snake()
      generateFruit();
 
 
-}
-
-void Snake::classic(){
-    for (int i = 0; i < snakeLength; i++) {
-        if (i == 0) {
-            snake[0].x0 = snake[0].x;snake[0].y0 = snake[0].y;
-			snake[0].x += direction.x;
-			snake[0].y += direction.y;
-        }else{
-            snake[i].x0 = snake[i].x;snake[i].y0 = snake[i].y;
-			snake[i].x = snake[i-1].x0;snake[i].y = snake[i-1].y0;
-        }
-
-        if (snake[i].x >= MAXX) snake[i].x = MINX + 10;
-        if (snake[i].x <= MINX) snake[i].x = MAXX - 10;
-        if (snake[i].y >= MAXY) snake[i].y = MINY + 10;
-        if (snake[i].y <= MINY) snake[i].y = MAXY - 10;
-
-        if (i != 0 && (snake[0].x == snake[i].x && snake[0].y == snake[i].y)) endGame = true;
-    }
-    if (snake[0].x == food.x && snake[0].y == food.y){
-		snake[snakeLength].x = snake[snakeLength-1].x0;snake[snakeLength].y = snake[snakeLength-1].y0;
-		snakeLength++;
-		PlaySound(TEXT("eatFood.wav"), NULL, SND_ASYNC);
-		//Random again food if sanke ate food
-		srand ( time(NULL));
-        do{
-        	food.x = (rand() % (39) + 3)*10;
-    		food.y = (rand() % (19) + 3)*10;
-		}while (checkPoint() == false);
-	}
 }
 
 void Snake::generateFruit()
@@ -176,9 +202,18 @@ bool Snake::tick()
     auto p = segmentsList.front();
     p.first += dx;
     p.second += dy;
-    if (p.first < 0 || p.first >= Width / 64 ||
-        p.second < 0 || p.second >= Height / 64)
-      return false;
+
+    if (p.first < 0) {
+      p.first = Width / 64 - 1;
+    } else if (p.first >= Width / 64) {
+      p.first = 0;
+    }
+    if (p.second < 0) {
+      p.second = Height / 64 - 1;
+    } else if (p.second >= Height / 64) {
+      p.second = 0;
+    }
+      //return false;
     for (const auto &segment: segmentsList)
       if (p == segment)
         return false;
@@ -312,128 +347,5 @@ void Snake::draw()
   dest.y = fruitY * 64;
   SDL_RenderCopyEx(renderer, sprites, &src, &dest, 0, nullptr, SDL_FLIP_NONE);
 
-  /*SDL_Color textColor = {255, 255, 255};
-    SDL_Surface *textSurface = TTF_RenderText_Solid(font, ("Score: " + std::to_string(score)).c_str(), textColor);
-    SDL_Texture *textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
-    SDL_Rect textRect = {10, 10, textSurface->w, textSurface->h};
-    SDL_RenderCopy(renderer, textTexture, nullptr, &textRect);
-    SDL_FreeSurface(textSurface);
-    SDL_DestroyTexture(textTexture);
-
-    // Cập nhật màn hình
-    SDL_RenderPresent(renderer);*/
 }
-
-void Snake::showHighScore(){
-	FILE *f;
-	f = fopen("highscore.txt", "r");
-	char ch[20];
-	settextstyle (1,0,5);
-	setcolor (15);
-	outtextxy (150,50,"HIGH SCORE");
-	settextstyle (1,0,4);
-	int y = 150,count = 0;
-	while (!feof(f)){
-		if (count == 10) break;
-		count++;
-		fscanf(f, "%s", ch);
-   		if (count%2 == 1){
-   			setcolor (10);
-   			outtextxy (180,y,ch);
-   			y+=50;
-		}else{
-			setcolor (12);
-			outtextxy (500,y-50,ch);
-		}
-	}
-	fclose(f);
-}
-void Snake::getHighScore (){
-	FILE *f;
-	f = fopen("highscore.txt", "w");
-	for (int i = 0;i < 5;i++){
-		fputs(highscore[i].name,f);
-		fputs(" ",f);
-		fprintf(f,"%d",highscore[i].score);
-		fputs("\n",f);
-	}
-	fclose(f);
-}
-void Snake::checkHighScore (int _score){
-	char _name[20]={""};
-	for (int i = 0;i < 5;i++){
-		if (_score > highscore[i].score){
-			//to do sth
-			settextstyle(1,0,3);
-				for (int j = 0;j < 50;j++){
-					if (j%2 == 0){
-						setcolor (14);
-						if (i == 0)
-						outtextxy(460,100,"BEST SCORE");
-						else
-						outtextxy(460,100,"HIGH SCORE");
-						delay(100);
-					}else{
-						setcolor (9);
-						if (i == 0)
-						outtextxy(460,100,"BEST SCORE");
-						else
-						outtextxy(460,100,"HIGH SCORE");
-						delay(100);
-					}
-				}
-				settextstyle(1,0,2);
-				setcolor (4);outtextxy(430,150,"Player:");
-				delay(100);
-				char ch1;
-				int x = 0;
-				char str[2];
-				str[1] = 0;
-				while (ch1 != 13 && x < 10){
-					do{
-						ch1 = getch();
-					}while (ch1 < 65 && ch1 >90 || ch1 < 97 && ch1 > 132);
-					x++;
-					str[0] = ch1;
-					strcat(_name,str);
-					outtextxy(540,150,_name);
-				}
-			for (int j = 4;j > i;j--){
-				strcpy(highscore[j].name,highscore[j-1].name);
-				highscore[j].score = highscore[j-1].score;
-			}
-			strcpy(highscore[i].name,_name);
-			highscore[i].score = _score;
-			break;
-		}
-	}
-	getHighScore();
-}
-
-/*SDL_Surface* LoadImage(std::string file_path)
-{
-  SDL_Surface * load_image = NULL;
-  SDL_Surface* optimize_image = NULL;
-  load_image = IMG_Load(file_path.c_str());
-  if (load_image != NULL)
-  {
-    optimize_image= SDL_DisplayFormat(load_image);
-    SDL_FreeSurface(load_image);
-  }
-  return optimize_image;
-}
-
-void ApplySurface(SDL_Surface* src, SDL_Surface* des, int x, int y)
-{
-  SDL_Rect offset;
-  offset.x = x;
-  offset.y = y;
-  SDL_BlitSurface(src, NULL, des, &offset);
-}
-
-void CleanUp()
-{
-  SDL_FreeSurface(g_screen);
-  SDL_FreeSurface(g_bkground);
-}*/
 

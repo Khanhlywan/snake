@@ -5,7 +5,7 @@
 	<iostream>
 	<stdexcept>
 
-1713792864 e:\lyly\ltnc\project_game\snake\snake.h
+1713865432 e:\lyly\ltnc\project_game\snake\snake.h
 	<SDL2/SDL.h>
 	<iostream>
 	<deque>
@@ -15,7 +15,7 @@
 	<ctime>
 	<SDL2/SDL_mixer.h>
 
-1713365836 source:e:\lyly\ltnc\project_game\snake\snake.cpp
+1713864076 source:e:\lyly\ltnc\project_game\snake\snake.cpp
 	"snake.h"
 	"sdl_check.h"
 

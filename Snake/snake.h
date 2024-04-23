@@ -58,3 +58,29 @@ struct HighScore {
 struct Point {
     int x,y,x0,y0;
 };
+//quan li nut bam
+class Button {
+public:
+  Button(int x, int y, int w, int h, std::string text);
+  void draw(SDL_Renderer *renderer);
+  bool isClicked(int mouseX, int mouseY);
+
+private:
+  SDL_Texture *texture;
+  SDL_Rect rect;
+  TTF_Font *font;
+  std::string text;
+};
+
+class Menu {
+public:
+  Menu();
+  void draw(SDL_Renderer* renderer);
+  bool handleEvents(SDL_Event* event);
+
+private:
+  Button playButton;
+  Button exitButton;
+  SDL_Texture *backgroundTexture;
+};
+
