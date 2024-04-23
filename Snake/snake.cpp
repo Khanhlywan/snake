@@ -2,78 +2,6 @@
 #include "sdl_check.h"
 
 
-Button::Button(int x, int y, int w, int h, std::string text) {
-  rect.x = x;
-  rect.y = y;
-  rect.w = w;
-  rect.h = h;
-  this->text = text;
-
-  font = TTF_OpenFont("font.ttf", 24);
-  if (!font) {
-    std::cerr << "Failed to load font" << std::endl;
-    return;
-  }
-
-  SDL_Surface *textSurface = TTF_RenderText_Solid(font, text.c_str(), {255, 255, 255});
-  if (!textSurface) {
-    std::cerr << "Failed to render text" << std::endl;
-    return;
-  }
-
-  texture = SDL_CreateTextureFromSurface(renderer, textSurface);
-  SDL_FreeSurface(textSurface);
-}
-void Button::draw(SDL_Renderer *renderer) {
-  SDL_RenderFillRect(renderer, &rect, {0, 0, 0});
-  SDL_RenderCopy(renderer, texture, NULL, &rect);
-}
-bool Button::isClicked(int mouseX, int mouseY) {
-  return mouseX >= rect.x && mouseX <= rect.x + rect.w &&
-         mouseY >= rect.y && mouseY <= rect.y + rect.h;
-}
-
-Menu::Menu() {
-  playButton = Button(Width / 4 - 50, Height / 2 - 30, 100, 60, "Play");
-  exitButton = Button(Width / 4 * 3 - 50, Height / 2 - 30, 100, 60, "Exit");
-
-  SDL_Surface *backgroundSurface = IMG_Load("menu.png");
-  if (!backgroundSurface) {
-    std::cerr << "Failed to load background image" << std::endl;
-    return;
-  }
-  backgroundTexture = SDL_CreateTextureFromSurface(renderer, backgroundSurface);
-  SDL_FreeSurface(backgroundSurface);
-}
-void Menu::draw(SDL_Renderer *renderer) {
-  SDL_RenderCopy(renderer, backgroundTexture, NULL, NULL);
-  playButton.draw(renderer);
-  exitButton.draw(renderer);
-}
-bool Menu::handleEvents(SDL_Event *event) {
-  switch (event->type) {
-    case SDL_MOUSEMOTION:
-      playButton.onMouseMove(event->motion.x, event->motion.y);
-      exitButton.onMouseMove(event->motion.x, event->motion.y);
-      break;
-    case SDL_MOUSEBUTTONDOWN:
-      if (event->button.button == SDL_BUTTON_LEFT) {
-        int mouseX = event->button.x;
-        int mouseY = event->button.y;
-        if (playButton.isClicked(mouseX, mouseY)) {
-          // Start the game! (Replace with your game logic)
-          return true; // Indicate game start
-        } else if (exitButton.isClicked(mouseX, mouseY)) {
-          // Exit the game! (Replace with exit logic)
-          return false; // Indicate game exit
-        }
-      }
-      break;
-  }
-  return false; // Continue showing the menu
-}
-
-
 Snake::Snake()
  {
      auto res = SDL_Init(SDL_INIT_EVERYTHING);
@@ -203,6 +131,7 @@ bool Snake::tick()
     p.first += dx;
     p.second += dy;
 
+    //Ran di xuyen qua man hinh
     if (p.first < 0) {
       p.first = Width / 64 - 1;
     } else if (p.first >= Width / 64) {
