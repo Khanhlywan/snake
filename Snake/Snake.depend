@@ -1,11 +1,11 @@
 # depslib dependency file v1.0
-1713365202 source:e:\lyly\ltnc\project_game\snake\main.cpp
+1713865941 source:e:\lyly\ltnc\project_game\snake\main.cpp
 	"snake.h"
 	"textobject.h"
 	<iostream>
 	<stdexcept>
 
-1713865432 e:\lyly\ltnc\project_game\snake\snake.h
+1713865873 e:\lyly\ltnc\project_game\snake\snake.h
 	<SDL2/SDL.h>
 	<iostream>
 	<deque>

@@ -1,5 +1,6 @@
 #include <SDL2/SDL.h>
 #include <iostream>
+#include <sstream>
 #include <deque>
 #include <windows.h>
 #include <SDL2/SDL_image.h>
@@ -75,7 +76,7 @@ private:
 class Menu {
 public:
   Menu();
-  void draw(SDL_Renderer* renderer);
+  void draw(SDL_Renderer *renderer);
   bool handleEvents(SDL_Event* event);
 
 private:
