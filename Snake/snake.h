@@ -5,6 +5,7 @@
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
 #include <ctime>
+#include <SDL2/SDL_mixer.h>
 
 class Snake
 {
@@ -14,6 +15,15 @@ public:
     int exec();
     bool tick();
     void draw();
+    void classic();//Di xuyen tuong
+    bool isEmpty();//luu diem cao
+    bool checkPoint();
+    void showHighScore();//doc thong tin file diem cao va xuat ra thong tin
+    void getHighScore();//ghi lai thong tin diem cao + luu
+    bool checkHighScore(int score);//nhan diem cao cua nguoi choi, lay thong tin nguoi choi neu nguoi choi dat thanh tich cao
+    void showText(int x,int y,char *str);
+    void showTextBackground(int x,int y,char *str,int color);
+
 
     static const auto HeadOpenMouth = 0;
     static const auto Tail = 1;
@@ -38,4 +48,13 @@ private:
   int fruitY;
   int score = 0;//Diem so
   void generateFruit();
+  int snakeLength;
+};
+
+struct HighScore {
+    int score;
+    char name[30];
+};
+struct Point {
+    int x,y,x0,y0;
 };
