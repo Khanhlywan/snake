@@ -4,6 +4,7 @@
 
 Snake::Snake()
  {
+     setFixedObstacles();
      auto res = SDL_Init(SDL_INIT_EVERYTHING);
      SDL_CHECK(res == 0, "SDL_Init");
      SDL_CreateWindowAndRenderer(Width, Height, SDL_WINDOW_BORDERLESS, &window, &renderer);
@@ -31,6 +32,13 @@ Snake::Snake()
      SDL_FreeSurface(backgroundSurface);
      SDL_RenderCopy(renderer, backgroundTexture, NULL, NULL);
 
+     auto obstacleSurface = IMG_Load("stone.png");
+     SDL_CHECK(obstacleSurface, "Failed to load obstacle image");
+     obstacleTexture = SDL_CreateTextureFromSurface(renderer, obstacleSurface);
+     SDL_CHECK(obstacleTexture, "Failed to create obstacle texture");
+     SDL_FreeSurface(obstacleSurface);
+
+
      auto surface = SDL_LoadBMP("sprites.bmp");
      //auto surface = SDL_LoadBMP("Garden-Background.png");
      SDL_CHECK(surface, "SDL_LoadBMP(\"sprites.bmp\")");
@@ -54,6 +62,16 @@ void Snake::generateFruit()
     fruitX = rand() % (Width / 64);
     fruitY = rand() % (Height / 64);
     done = true;
+
+    for (const auto &obstacle : obstacles)
+        {
+            if (fruitX == obstacle.first && fruitY == obstacle.second)
+            {
+                done = false;
+                break;
+            }
+        }
+
     for (const auto &segment: segmentsList)
     {
       if (fruitX == segment.first && fruitY == segment.second)
@@ -64,6 +82,60 @@ void Snake::generateFruit()
     }
   } while (!done);
 }
+
+void Snake::generateObstacles(int numObstacles) {
+    srand(time(NULL));
+    std::set<std::pair<int, int>> obstacleSet; // Sử dụng set để đảm bảo không có chướng ngại vật trùng lặp
+
+    for (int i = 0; i < numObstacles; i++) {
+        int obstacleX, obstacleY;
+        bool isValid = false;
+        while (!isValid) {
+            obstacleX = rand() % (Width / 64);
+            obstacleY = rand() % (Height / 64);
+            isValid = true;
+
+            // Kiểm tra xem vị trí chướng ngại vật có trùng với rắn hoặc quả hay không
+            for (const auto &segment: segmentsList) {
+                if (segment.first == obstacleX && segment.second == obstacleY) {
+                    isValid = false;
+                    break;
+                }
+            }
+
+            if (obstacleX == fruitX && obstacleY == fruitY) {
+                isValid = false;
+            }
+
+            // Kiểm tra xem vị trí chướng ngại vật đã tồn tại trong danh sách chướng ngại vật hay chưa
+            if (obstacleSet.find(std::make_pair(obstacleX, obstacleY)) != obstacleSet.end()) {
+                isValid = false;
+            } else {
+                obstacleSet.insert(std::make_pair(obstacleX, obstacleY));
+            }
+        }
+
+
+        // Thêm chướng ngại vật vào danh sách
+        obstacles.push_back(std::make_pair(obstacleX, obstacleY));
+    }
+}
+void Snake::setFixedObstacles() {
+    // Danh sách các tọa độ chướng ngại vật cố định
+    std::vector<std::pair<int, int>> fixedObstacles = {
+        {50, 50},
+        {30, 40},
+        {20, 30},
+        // Thêm các tọa độ chướng ngại vật khác mà bạn muốn
+    };
+
+    // Khởi tạo danh sách obstacles
+    obstacles.clear();
+    for (const auto &coord : fixedObstacles) {
+        obstacles.push_back(coord);
+    }
+}
+
 Snake::~Snake()
 {
     SDL_DestroyRenderer(renderer);
@@ -125,8 +197,15 @@ int Snake::exec()
 }
 bool Snake::tick()
 {
+  setFixedObstacles();
   if (ticks++ % 250 == 0)
   {
+    for (const auto &obstacle : obstacles) {
+     if (segmentsList.front().first == obstacle.first && segmentsList.front().second == obstacle.second) {
+       return false; // Game over
+     }
+    }
+
     auto p = segmentsList.front();
     p.first += dx;
     p.second += dy;
@@ -142,7 +221,14 @@ bool Snake::tick()
     } else if (p.second >= Height / 64) {
       p.second = 0;
     }
-      //return false;
+    // Kiểm tra xem con rắn có đâm vào chướng ngại vật hay không
+    /*for (const auto &obstacle : obstacles) {
+        //if (p == obstacle)
+        if (p.first == obstacle.first && p.second == obstacle.second) {
+                return false; // Kết thúc trò chơi nếu rắn đâm vào chướng ngại vật
+        }
+    }*/
+
     for (const auto &segment: segmentsList)
       if (p == segment)
         return false;
@@ -176,6 +262,14 @@ void Snake::draw()
   SDL_Rect dest;
   dest.w = 64;
   dest.h = 64;
+  // Vẽ chướng ngại vật
+    for (const auto &obstacle: obstacles) {
+        dest.x = obstacle.first * 12;
+        dest.y = obstacle.second * 12;
+        SDL_RenderCopy(renderer, obstacleTexture, NULL, &dest);
+        //SDL_RenderFillRect(renderer, &dest);
+    }
+
   int ds[][3] = {
     { -1, 0, 0 },
     { 0, -1, 90 },
@@ -275,6 +369,7 @@ void Snake::draw()
   dest.x = fruitX * 64;
   dest.y = fruitY * 64;
   SDL_RenderCopyEx(renderer, sprites, &src, &dest, 0, nullptr, SDL_FLIP_NONE);
+  SDL_RenderPresent(renderer);
 
 }
 

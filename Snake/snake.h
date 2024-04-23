@@ -1,6 +1,8 @@
 #include <SDL2/SDL.h>
 #include <iostream>
 #include <sstream>
+#include <vector>
+#include <set>
 #include <deque>
 #include <windows.h>
 #include <SDL2/SDL_image.h>
@@ -24,6 +26,10 @@ public:
     bool checkHighScore(int score);//nhan diem cao cua nguoi choi, lay thong tin nguoi choi neu nguoi choi dat thanh tich cao
     void showText(int x,int y,char *str);
     void showTextBackground(int x,int y,char *str,int color);
+    void generateObstacles(int x);
+    bool isOnSnake(int x, int y);
+    bool isOnFruit(int x, int y);
+    void setFixedObstacles();
 
 
     static const auto HeadOpenMouth = 0;
@@ -39,9 +45,11 @@ private:
   SDL_Renderer *renderer;
   SDL_Texture *sprites;
   SDL_Texture *backgroundTexture;
+  SDL_Texture *obstacleTexture; // Texture cho chướng ngại vật
   TTF_Font *font;
 
   std::deque<std::pair<int, int> > segmentsList;
+  std::vector<std::pair<int, int>> obstacles;
   unsigned ticks = 0;
   int dx = 1;
   int dy = 0;
@@ -51,6 +59,8 @@ private:
   void generateFruit();
   int snakeLength;
 };
+//chuong ngai vat
+//std::vector<std::pair<int, int>> obstacles;
 
 struct HighScore {
     int score;
