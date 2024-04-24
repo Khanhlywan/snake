@@ -83,7 +83,7 @@ void Snake::generateFruit()
   } while (!done);
 }
 
-void Snake::generateObstacles(int numObstacles) {
+/*void Snake::generateObstacles(int numObstacles) {
     srand(time(NULL));
     std::set<std::pair<int, int>> obstacleSet; // Sử dụng set để đảm bảo không có chướng ngại vật trùng lặp
 
@@ -119,21 +119,24 @@ void Snake::generateObstacles(int numObstacles) {
         // Thêm chướng ngại vật vào danh sách
         obstacles.push_back(std::make_pair(obstacleX, obstacleY));
     }
-}
+}*/
+
 void Snake::setFixedObstacles() {
     // Danh sách các tọa độ chướng ngại vật cố định
     std::vector<std::pair<int, int>> fixedObstacles = {
-        {50, 50},
-        {30, 40},
-        {20, 30},
+        {30, 20},
+        {50, 30},
+        {70, 20},
         // Thêm các tọa độ chướng ngại vật khác mà bạn muốn
     };
+
 
     // Khởi tạo danh sách obstacles
     obstacles.clear();
     for (const auto &coord : fixedObstacles) {
-        obstacles.push_back(coord);
-    }
+
+            obstacles.push_back(coord);
+ }
 }
 
 Snake::~Snake()
@@ -195,15 +198,16 @@ int Snake::exec()
   }
     return 0;
 }
+
 bool Snake::tick()
 {
   setFixedObstacles();
   if (ticks++ % 250 == 0)
   {
     for (const auto &obstacle : obstacles) {
-     if (segmentsList.front().first == obstacle.first && segmentsList.front().second == obstacle.second) {
-       return false; // Game over
-     }
+      if (segmentsList.front().first == obstacle.first && segmentsList.front().second == obstacle.second) {
+        return false; // Game over
+      }
     }
 
     auto p = segmentsList.front();
@@ -222,30 +226,27 @@ bool Snake::tick()
       p.second = 0;
     }
     // Kiểm tra xem con rắn có đâm vào chướng ngại vật hay không
-    /*for (const auto &obstacle : obstacles) {
-        //if (p == obstacle)
-        if (p.first == obstacle.first && p.second == obstacle.second) {
-                return false; // Kết thúc trò chơi nếu rắn đâm vào chướng ngại vật
-        }
-    }*/
+    for (const auto &obstacle : obstacles) {
+      if (p.first > obstacle.first && p.first < obstacle.first + 64 ) {
+        return false; // Kết thúc trò chơi nếu rắn đâm vào chướng ngại vật
+      }
+      if (p.second > obstacle.second && p.second < obstacle.second + 64 ) {
+        return false; // Kết thúc trò chơi nếu rắn đâm vào chướng ngại vật
+      }
+    }
 
-    for (const auto &segment: segmentsList)
-      if (p == segment)
+    for (const auto &segment : segmentsList) {
+      if (p == segment) {
         return false;
+      }
+    }
     segmentsList.push_front(p);
-    if (p.first != fruitX || p.second != fruitY)
+    if (p.first != fruitX || p.second != fruitY) {
       segmentsList.pop_back();
-    else
+    } else {
       generateFruit();
+    }
   }
-   /*if (segmentsList.front().first < 0)
-        segmentsList.front().first = Width / 64 - 1;
-    else if (segmentsList.front().first >= Width / 64)
-        segmentsList.front().first = 0;
-    if (segmentsList.front().second < 0)
-        segmentsList.front().second = Height / 64 - 1;
-    else if (segmentsList.front().second >= Height / 64)
-        segmentsList.front().second = 0;*/
 
   return true;
 }
