@@ -2,7 +2,9 @@
 #include <iostream>
 #include <sstream>
 #include <vector>
+#include <fstream>
 #include <set>
+#include <map>
 #include <deque>
 #include <windows.h>
 #include <SDL2/SDL_image.h>
@@ -18,18 +20,12 @@ public:
     int exec();
     bool tick();
     void draw();
-    void classic();//Di xuyen tuong
-    bool isEmpty();//luu diem cao
-    bool checkPoint();
-    void showHighScore();//doc thong tin file diem cao va xuat ra thong tin
-    void getHighScore();//ghi lai thong tin diem cao + luu
-    bool checkHighScore(int score);//nhan diem cao cua nguoi choi, lay thong tin nguoi choi neu nguoi choi dat thanh tich cao
-    void showText(int x,int y,char *str);
     void showTextBackground(int x,int y,char *str,int color);
     void generateObstacles(int x);
     bool isOnSnake(int x, int y);
     bool isOnFruit(int x, int y);
     void setFixedObstacles();
+    bool checkCollision(int x, int y);
 
 
     static const auto HeadOpenMouth = 0;
@@ -49,7 +45,7 @@ private:
   TTF_Font *font;
 
   std::deque<std::pair<int, int> > segmentsList;
-  std::vector<std::pair<int, int>> obstacles;
+  std::map<std::pair<int, int>, bool> obstacles;
   unsigned ticks = 0;
   int dx = 1;
   int dy = 0;
@@ -59,14 +55,16 @@ private:
   void generateFruit();
   int snakeLength;
 };
-//chuong ngai vat
-//std::vector<std::pair<int, int>> obstacles;
 
-struct HighScore {
-    int score;
-    char name[30];
-};
-struct Point {
-    int x,y,x0,y0;
+class Menu {
+public:
+    void displayMenu(SDL_Renderer *renderer);
+    void handleEvents(SDL_Event &event, bool &play, bool &quit);
+    SDL_Rect playButtonRect;
+    SDL_Rect exitButtonRect;
+private:
+    SDL_Texture *backgroundTexture;
+    SDL_Texture *playButtonTexture;
+    SDL_Texture *exitButtonTexture;
 };
 
