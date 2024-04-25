@@ -21,10 +21,6 @@ public:
     int exec();
     bool tick();
     void draw();
-    void showTextBackground(int x,int y,char *str,int color);
-    void generateObstacles(int x);
-    bool isOnSnake(int x, int y);
-    bool isOnFruit(int x, int y);
     void setFixedObstacles();
     bool checkCollision(int x, int y);
 
@@ -51,24 +47,8 @@ private:
   int dy = 0;
   int fruitX;
   int fruitY;
-  int score = 0;//Diem so
   void generateFruit();
   int snakeLength;
 
-};
-
-class Menu {
-public:
-
-    void displayMenu(SDL_Renderer *renderer);
-    void handleEvents(SDL_Event &event, bool &play, bool &quit);
-    void loadTextures(SDL_Renderer *renderer);
-
-private:
-    SDL_Texture *backgroundTexture;
-    SDL_Texture *playButtonTexture;
-    SDL_Texture *exitButtonTexture;
-    SDL_Rect playButtonRect;
-    SDL_Rect exitButtonRect;
 };
 

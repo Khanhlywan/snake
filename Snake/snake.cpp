@@ -1,28 +1,30 @@
 #include "snake.h"
 #include "sdl_check.h"
+#include "graphics.h"
 
 
 Snake::Snake()
- {
+{
+     ultis
      setFixedObstacles();
-     auto res = SDL_Init(SDL_INIT_EVERYTHING);
-     SDL_CHECK(res == 0, "SDL_Init");
-     SDL_CreateWindowAndRenderer(Width, Height, SDL_WINDOW_BORDERLESS, &window, &renderer);
-     SDL_CHECK(window, "SDL_CreateWindowAndRenderer");
-     SDL_CHECK(renderer, "SDL_CreateWindowAndRenderer");
-     //SDL_Surface* LoadImage(std::string "background.png")
+     SDL_Init(SDL_INIT_EVERYTHING);
+     window =SDL_CreateWindow("snake",SDL_WINDOWPOS_CENTERED,SDL_WINDOWPOS_CENTERED,1260,600,SDL_WINDOW_SHOWN);
+     renderer=SDL_CreateRenderer(window,-1,SDL_RENDERER_ACCELERATED|SDL_RENDERER_PRESENTVSYNC);
+     SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
+     SDL_RenderSetLogicalSize(renderer, 1260, 600);
 
-     SDL_SetWindowPosition(window, 65, 65);
+     if (Mix_OpenAudio(22050, MIX_DEFAULT_FORMAT, 2, 4096) == -1) {
+        std::cerr << "Failed to initialize audio: " << Mix_GetError() << std::endl;
+        return;
+    }
 
-    // std::srand(static_cast<unsigned>(std::time(nullptr)));//khoi tao random seed
-
-     /*font = TTF_OpenFont("font.ttf", 24); // Thay "font.ttf" bằng đường dẫn đến font bạn muốn sử dụng
-     if (!font)
-     {
-      // Xử lý lỗi nếu không thể mở font
-      std::cerr << "Khong the mo tep font!" <<TTF_GetError() << std::endl;
-      return; // Hoặc thực hiện các hành động xử lý lỗi khác, ví dụ như thoát khỏi chương trình
-     }*/
+    // Tải các tệp âm thanh
+    eatSound = Mix_LoadWAV("eat.wav");
+    deathSound = Mix_LoadWAV("death.wav");
+    if (!eatSound || !deathSound) {
+        std::cerr << "Failed to load sound effects: " << Mix_GetError() << std::endl;
+        return;
+    }
 
      auto backgroundSurface = IMG_Load("background.png");
      SDL_CHECK(backgroundSurface, "Failed to load background image");
@@ -214,6 +216,7 @@ bool Snake::tick()
       segmentsList.pop_back();
     } else {
       generateFruit();
+      Mix_PlayChannel(-1, eatSound, 0);
     }
   }
 
