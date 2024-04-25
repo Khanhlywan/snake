@@ -1,5 +1,4 @@
 #include "snake.h"
-#include "textobject.h"
 #include <iostream>
 #include <stdexcept>
 #include "graphics.h"
@@ -55,7 +54,6 @@ int main(int argc, char **argv) {
         }
     }
         graphic.close();
-
 
 
 }

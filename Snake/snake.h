@@ -3,8 +3,6 @@
 #include <sstream>
 #include <vector>
 #include <fstream>
-#include <set>
-#include <map>
 #include <deque>
 #include <windows.h>
 #include <SDL2/SDL_image.h>
@@ -19,10 +17,13 @@ public:
     ~Snake();
 
     int exec();
+    void init();
     bool tick();
     void draw();
-    void setFixedObstacles();
-    bool checkCollision(int x, int y);
+    void displayPlayAgainScreen();
+    void resetGame();
+    void exitGame();
+    void onFruitEaten();
 
     static const auto HeadOpenMouth = 0;
     static const auto Tail = 1;
@@ -32,13 +33,16 @@ public:
     static const auto Fruit = 5;
     const static auto Width = 1260;
     const static auto Height = 600;
+
+
 private:
   SDL_Window *window;
   SDL_Renderer *renderer;
   SDL_Texture *sprites;
   SDL_Texture *backgroundTexture;
-  SDL_Texture *obstacleTexture; // Texture cho chướng ngại vật
-  TTF_Font *font;
+  SDL_Texture *playAgainTexture;
+  SDL_Texture *menuTexture;
+  Uint32 lastMoveTime;
 
   std::deque<std::pair<int, int> > segmentsList;
   std::vector<std::pair<int, int>> obstacles;
@@ -49,6 +53,12 @@ private:
   int fruitY;
   void generateFruit();
   int snakeLength;
+  float initialSpeed = 0.1f; // Tốc độ ban đầu của con rắn (tính bằng giây)
+  float currentSpeed = initialSpeed; // Tốc độ hiện tại của con rắn
+
+
+   Mix_Chunk *eatSound;
+   Mix_Chunk *deathSound;
 
 };
 

@@ -1,19 +1,16 @@
 # depslib dependency file v1.0
-1714040321 source:e:\lyly\ltnc\project_game\snake\main.cpp
+1714063883 source:e:\lyly\ltnc\project_game\snake\main.cpp
 	"snake.h"
-	"textobject.h"
 	<iostream>
 	<stdexcept>
 	"graphics.h"
 
-1714035968 e:\lyly\ltnc\project_game\snake\snake.h
+1714063867 e:\lyly\ltnc\project_game\snake\snake.h
 	<SDL2/SDL.h>
 	<iostream>
 	<sstream>
 	<vector>
 	<fstream>
-	<set>
-	<map>
 	<deque>
 	<windows.h>
 	<SDL2/SDL_image.h>
@@ -21,7 +18,7 @@
 	<ctime>
 	<SDL2/SDL_mixer.h>
 
-1714041533 source:e:\lyly\ltnc\project_game\snake\snake.cpp
+1714069739 source:e:\lyly\ltnc\project_game\snake\snake.cpp
 	"snake.h"
 	"sdl_check.h"
 	"graphics.h"
