@@ -17,6 +17,7 @@ class Snake
 public:
     Snake();
     ~Snake();
+
     int exec();
     bool tick();
     void draw();
@@ -26,7 +27,6 @@ public:
     bool isOnFruit(int x, int y);
     void setFixedObstacles();
     bool checkCollision(int x, int y);
-
 
     static const auto HeadOpenMouth = 0;
     static const auto Tail = 1;
@@ -45,7 +45,7 @@ private:
   TTF_Font *font;
 
   std::deque<std::pair<int, int> > segmentsList;
-  std::map<std::pair<int, int>, bool> obstacles;
+  std::vector<std::pair<int, int>> obstacles;
   unsigned ticks = 0;
   int dx = 1;
   int dy = 0;
@@ -54,17 +54,21 @@ private:
   int score = 0;//Diem so
   void generateFruit();
   int snakeLength;
+
 };
 
 class Menu {
 public:
+
     void displayMenu(SDL_Renderer *renderer);
     void handleEvents(SDL_Event &event, bool &play, bool &quit);
-    SDL_Rect playButtonRect;
-    SDL_Rect exitButtonRect;
+    void loadTextures(SDL_Renderer *renderer);
+
 private:
     SDL_Texture *backgroundTexture;
     SDL_Texture *playButtonTexture;
     SDL_Texture *exitButtonTexture;
+    SDL_Rect playButtonRect;
+    SDL_Rect exitButtonRect;
 };
 

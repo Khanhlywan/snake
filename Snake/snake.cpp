@@ -1,35 +1,6 @@
 #include "snake.h"
 #include "sdl_check.h"
 
-void Menu::displayMenu(SDL_Renderer *renderer) {
-    // Vẽ nền của menu từ texture backgroundTexture
-    SDL_RenderCopy(renderer, backgroundTexture, NULL, NULL);
-
-    // Vẽ nút "Play" từ texture playButtonTexture
-    SDL_RenderCopy(renderer, playButtonTexture, NULL, &playButtonRect);
-
-    // Vẽ nút "Exit" từ texture exitButtonTexture
-    SDL_RenderCopy(renderer, exitButtonTexture, NULL, &exitButtonRect);
-}
-void Menu::handleEvents(SDL_Event &event, bool &play, bool &quit) {
-    if (event.type == SDL_MOUSEBUTTONDOWN) {
-        int mouseX, mouseY;
-        SDL_GetMouseState(&mouseX, &mouseY);
-
-        // Kiểm tra nút "Play" được nhấn
-        if (mouseX >= playButtonRect.x && mouseX <= playButtonRect.x + playButtonRect.w &&
-            mouseY >= playButtonRect.y && mouseY <= playButtonRect.y + playButtonRect.h) {
-            play = true;
-        }
-
-        // Kiểm tra nút "Exit" được nhấn
-        if (mouseX >= exitButtonRect.x && mouseX <= exitButtonRect.x + exitButtonRect.w &&
-            mouseY >= exitButtonRect.y && mouseY <= exitButtonRect.y + exitButtonRect.h) {
-            quit = true;
-        }
-    }
-}
-
 
 Snake::Snake()
  {
@@ -105,21 +76,30 @@ void Snake::generateFruit()
 
 
 void Snake::setFixedObstacles() {
-    obstacles.clear();
-    obstacles.insert({{30, 20}, true});
-    obstacles.insert({{50, 30}, true});
-    obstacles.insert({{70, 20}, true});
     // Thêm các tọa độ chướng ngại vật khác vào map obstacles
+    std::vector<std::pair<int, int>> fixedObstacles = {
+        {30, 20},
+        {50, 30},
+        {70, 20},
+    };
+
+
+    // Khởi tạo danh sách obstacles
+    obstacles.clear();
+    for (const auto &coord : fixedObstacles) {
+        obstacles.push_back(coord);
+    }
 
 }
 
-bool Snake::checkCollision(int x, int y) {
-        // Kiểm tra xem tọa độ đầu con rắn có va chạm với chướng ngại vật hay không
-        if (obstacles.find({x, y}) != obstacles.end()) {
-            return true; // Va chạm
-        }
-        return false; // Không va chạm
-}
+/*bool Snake::checkCollision(int x, int y) {
+    // Kiểm tra xem tọa độ đầu con rắn có va chạm với chướng ngại vật hay không
+    // Nếu tọa độ (x, y) tồn tại trong map obstacles
+    if (obstacles.count({x, y}) > 0) {
+        return true; // Va chạm
+    }
+    return false; // Không va chạm
+*/
 
 Snake::~Snake()
 {
@@ -131,53 +111,6 @@ Snake::~Snake()
 
 int Snake::exec()
 {
-   /* Menu menu;
-
-    // Tải texture cho background, playButton và exitButton
-    SDL_Surface *backgroundSurface = IMG_Load("menu.png");
-    SDL_Surface *playButtonSurface = IMG_Load("play.png");
-    SDL_Surface *exitButtonSurface = IMG_Load("exit.png");
-
-    SDL_Texture *backgroundTexture = SDL_CreateTextureFromSurface(renderer, backgroundSurface);
-    SDL_Texture *playButtonTexture = SDL_CreateTextureFromSurface(renderer, playButtonSurface);
-    SDL_Texture *exitButtonTexture = SDL_CreateTextureFromSurface(renderer, exitButtonSurface);
-
-    SDL_FreeSurface(backgroundSurface);
-    SDL_FreeSurface(playButtonSurface);
-    SDL_FreeSurface(exitButtonSurface);
-
-    // Thiết lập kích thước và vị trí của nút "Play"
-    SDL_QueryTexture(playButtonTexture, NULL, NULL, &menu.playButtonRect.w, &menu.playButtonRect.h);
-    menu.playButtonRect.x = Width / 2 - menu.playButtonRect.w / 2;
-    menu.playButtonRect.y = Height / 2 - menu.playButtonRect.h / 2 - 50;
-
-    // Thiết lập kích thước và vị trí của nút "Exit"
-    SDL_QueryTexture(exitButtonTexture, NULL, NULL, &menu.exitButtonRect.w, &menu.exitButtonRect.h);
-    menu.exitButtonRect.x = Width / 2 - menu.exitButtonRect.w / 2;
-    menu.exitButtonRect.y = Height / 2 - menu.exitButtonRect.h / 2 + 50;
-
-
-    // Hiển thị menu
-    bool play = false;
-    bool quit = false;
-    while (!play && !quit) {
-        SDL_Event event;
-        while (SDL_PollEvent(&event)) {
-            if (event.type == SDL_QUIT) {
-                quit = true;
-            } else {
-                menu.handleEvents(event, play, quit);
-            }
-        }
-
-        // Xóa màn hình và vẽ menu
-        SDL_RenderClear(renderer);
-        menu.displayMenu(renderer);
-        SDL_RenderPresent(renderer);
-    }
-
-    // Nếu người chơi chọn "Play", chuyển sang chế độ chơi game
-    if (play) {*/
         auto oldTick = SDL_GetTicks();
         //auto oldTick = SDL_GetTicks();
          for (auto done = false; !done;)
@@ -227,9 +160,9 @@ int Snake::exec()
       SDL_RenderPresent(renderer);
   }
     return 0;
-    /*}
 
-    // Giải phóng bộ nhớ và thoát
+
+   /* // Giải phóng bộ nhớ và thoát
     SDL_DestroyTexture(backgroundTexture);
     SDL_DestroyTexture(playButtonTexture);
     SDL_DestroyTexture(exitButtonTexture);*/
@@ -245,7 +178,7 @@ bool Snake::tick()
   if (ticks++ % 250 == 0)
   {
     for (const auto &obstacle : obstacles) {
-      if (segmentsList.front().first == obstacle.first.first && segmentsList.front().second == obstacle.first.second) {
+      if (segmentsList.front().first == obstacle.first && segmentsList.front().second == obstacle.second) {
         return false; // Game over
       }
     }
@@ -265,13 +198,12 @@ bool Snake::tick()
     } else if (p.second >= Height / 64) {
       p.second = 0;
     }
-    int headX = segmentsList.front().first;
-    int headY = segmentsList.front().second;
+    for (auto &obstacle : obstacles) {
+      if (p.first == obstacle.first && p.second == obstacle.second) {
+        return false; // Kết thúc trò chơi nếu rắn đâm vào chướng ngại vật
+      }
+    }
 
-    // Kiểm tra va chạm với chướng ngại vật
-    if (checkCollision(headX, headY)==true) {
-            return false; // Kết thúc trò chơi
-        }
     for (const auto &segment : segmentsList) {
       if (p == segment) {
         return false;
@@ -288,6 +220,7 @@ bool Snake::tick()
   return true;
 }
 
+
 void Snake::draw()
 {
   SDL_RenderCopy(renderer, backgroundTexture, NULL, NULL);
@@ -302,7 +235,7 @@ void Snake::draw()
   dest.h = 64;
   // Vẽ chướng ngại vật
     for (const auto &obstacle: obstacles) {
-        dest.x = obstacle.first.first * 12;
+        dest.x = obstacle.first * 12;
         dest.y = obstacle.second* 12;
         SDL_RenderCopy(renderer, obstacleTexture, NULL, &dest);
         //SDL_RenderFillRect(renderer, &dest);

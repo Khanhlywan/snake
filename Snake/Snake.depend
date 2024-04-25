@@ -1,11 +1,12 @@
 # depslib dependency file v1.0
-1713892142 source:e:\lyly\ltnc\project_game\snake\main.cpp
+1714040245 source:e:\lyly\ltnc\project_game\snake\main.cpp
 	"snake.h"
 	"textobject.h"
 	<iostream>
 	<stdexcept>
+	"graphics.h"
 
-1713971285 e:\lyly\ltnc\project_game\snake\snake.h
+1714035968 e:\lyly\ltnc\project_game\snake\snake.h
 	<SDL2/SDL.h>
 	<iostream>
 	<sstream>
@@ -20,7 +21,7 @@
 	<ctime>
 	<SDL2/SDL_mixer.h>
 
-1713972226 source:e:\lyly\ltnc\project_game\snake\snake.cpp
+1714035113 source:e:\lyly\ltnc\project_game\snake\snake.cpp
 	"snake.h"
 	"sdl_check.h"
 
@@ -43,4 +44,12 @@
 
 1713327772 source:e:\lyly\ltnc\project_game\snake\textobject.cpp
 	"BaseObject.h"
+
+1714036025 e:\lyly\ltnc\project_game\snake\graphics.h
+	<iostream>
+	<SDL2/SDL_image.h>
+	<SDL2/SDL.h>
+
+1714035380 source:e:\lyly\ltnc\project_game\snake\graphics.cpp
+	"graphics.h"
 
