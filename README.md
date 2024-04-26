@@ -7,7 +7,8 @@
 - Bài tập lớn: Snake Game (INT2215_25 - Lập trình nâng cao)
 
 ## Demo Game
-link:
+
+link: https://www.youtube.com/watch?v=qb_7J3c0Y_k
 
 ## Description 
 - Game Snake là một trò chơi arcade kinh điển trong đó người chơi điều khiển một con rắn trên một bảng chơi. Mục tiêu của trò chơi là điều khiển con rắn để ăn những quả trái cây xuất hiện trên bảng. Mỗi lần con rắn ăn được một quả trái cây, chiều dài của nó sẽ tăng lên, và trò chơi sẽ trở nên khó khăn hơn khi người chơi phải điều khiển một con rắn dài hơn.
