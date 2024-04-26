@@ -56,30 +56,30 @@ Menu và các nút "Play", "Exit", "Play Again" mình tự thiết kế
 Âm thanh: Lấy các âm thanh trên google
 ## 3. Source code
 - **snake.h**
-  -- Khai báo các thư viện cần dùng để chạy code
-  -- Khai báo các hàm bên trong Class Snake
+  - Khai báo các thư viện cần dùng để chạy code
+  - Khai báo các hàm bên trong Class Snake
 - **snake.cpp**
-   -- Định nghĩa các hàm trong snake.h
-   -- Hàm Snake để load lên các hình ảnh, âm thanh
-   -- Hàm generateFruit tạo quả ngẫu nhiên và kiểm tra xem quả có trùng với rắn không.
-   -- Hàm onFruitEaten để tăng tốc độ di chuyển của con rắn thông qua việc giảm thời gian giữa các lần di chuyển.
-   -- Hàm ~Snake có nhiệm vụ giải phóng tài nguyên và đóng các thành phần sử dụng trong trò chơi rắn
-   -- Hàm exe điều khiển quá trình chạy trò chơi rắn bằng cách xử lý sự kiện, cập nhật trạng thái và vẽ các phần tử trên màn hình, và sau đó giải phóng tài nguyên và đóng các thành phần khi trò chơi kết thúc.
-   -- Hàm displayPlayAgainScreen được sử dụng để hiển thị màn hình "Play Again" và xử lý các sự kiện từ người chơi, bao gồm nhấn phím, nhấp chuột và yêu cầu thoát trò chơi.
-   -- Hàm exitGame(): Hàm này được sử dụng để thoát khỏi trò chơi. Nó giải phóng các tài nguyên âm thanh, đóng kết cấu và cửa sổ, đóng SDL, và cuối cùng là thoát khỏi ứng dụng bằng cách gọi exit(0).
-   -- Hàm resetGame(): Hàm này được sử dụng để thiết lập lại trạng thái của trò chơi khi người chơi muốn chơi lại. Nó xóa danh sách các đoạn của con rắn và khởi tạo lại các giá trị ban đầu như vị trí, hướng di chuyển và tốc độ. Sau đó, nó gọi phương thức exec() để bắt đầu chạy lại trò chơi.
-   -- Hàm tick(): Hàm này được gọi mỗi khi di chuyển một bước trong trò chơi. Nó xác định thời điểm di chuyển cuối cùng và kiểm tra xem có va chạm với thân rắn hay không. Nếu có, trò chơi kết thúc. Sau đó, nó cập nhật vị trí của đoạn đầu của con rắn dựa trên hướng di chuyển hiện tại và kiểm tra xem con rắn đã ăn quả hay chưa. Nếu con rắn ăn quả, nó tạo một quả mới và tăng tốc độ của con rắn. Cuối cùng, nó trả về true nếu trò chơi vẫn tiếp tục và false nếu trò chơi kết thúc.
-   -- Hàm draw(): Hàm này được sử dụng để vẽ các phần tử của trò chơi lên màn hình. Nó sử dụng các texture và renderer để vẽ hình ảnh và vị trí của các đoạn của con rắn. Ngoài ra, nó cũng vẽ quả trái cây trên màn hình. Cuối cùng, nó gọi SDL_RenderPresent(renderer) để hiển thị các phần tử đã được vẽ.
+   - Định nghĩa các hàm trong snake.h
+   - Hàm Snake để load lên các hình ảnh, âm thanh
+   - Hàm generateFruit tạo quả ngẫu nhiên và kiểm tra xem quả có trùng với rắn không.
+   - Hàm onFruitEaten để tăng tốc độ di chuyển của con rắn thông qua việc giảm thời gian giữa các lần di chuyển.
+   - Hàm ~Snake có nhiệm vụ giải phóng tài nguyên và đóng các thành phần sử dụng trong trò chơi rắn
+   - Hàm exe điều khiển quá trình chạy trò chơi rắn bằng cách xử lý sự kiện, cập nhật trạng thái và vẽ các phần tử trên màn hình, và sau đó giải phóng tài nguyên và đóng các thành phần khi trò chơi kết thúc.
+   - Hàm displayPlayAgainScreen được sử dụng để hiển thị màn hình "Play Again" và xử lý các sự kiện từ người chơi, bao gồm nhấn phím, nhấp chuột và yêu cầu thoát trò chơi.
+   - Hàm exitGame(): Hàm này được sử dụng để thoát khỏi trò chơi. Nó giải phóng các tài nguyên âm thanh, đóng kết cấu và cửa sổ, đóng SDL, và cuối cùng là thoát khỏi ứng dụng bằng cách gọi exit(0).
+   - Hàm resetGame(): Hàm này được sử dụng để thiết lập lại trạng thái của trò chơi khi người chơi muốn chơi lại. Nó xóa danh sách các đoạn của con rắn và khởi tạo lại các giá trị ban đầu như vị trí, hướng di chuyển và tốc độ. Sau đó, nó gọi phương thức exec() để bắt đầu chạy lại trò chơi.
+   - Hàm tick(): Hàm này được gọi mỗi khi di chuyển một bước trong trò chơi. Nó xác định thời điểm di chuyển cuối cùng và kiểm tra xem có va chạm với thân rắn hay không. Nếu có, trò chơi kết thúc. Sau đó, nó cập nhật vị trí của đoạn đầu của con rắn dựa trên hướng di chuyển hiện tại và kiểm tra xem con rắn đã ăn quả hay chưa. Nếu con rắn ăn quả, nó tạo một quả mới và tăng tốc độ của con rắn. Cuối cùng, nó trả về true nếu trò chơi vẫn tiếp tục và false nếu trò chơi kết thúc.
+   - Hàm draw(): Hàm này được sử dụng để vẽ các phần tử của trò chơi lên màn hình. Nó sử dụng các texture và renderer để vẽ hình ảnh và vị trí của các đoạn của con rắn. Ngoài ra, nó cũng vẽ quả trái cây trên màn hình. Cuối cùng, nó gọi SDL_RenderPresent(renderer) để hiển thị các phần tử đã được vẽ.
 - **graphics.h**: lớp ultis và các phương thức trong đoạn mã trên được sử dụng để cung cấp các chức năng tiện ích cho việc làm việc với SDL, bao gồm khởi tạo và giải phóng tài nguyên, vẽ hình ảnh và xử lý sự kiện từ người dùng. **Mình sử dụng lớp ultis để tạo menu cho game**.
 - **graphics.cpp**
-   -- SDLInit(): Phương thức này được sử dụng để khởi tạo SDL và tạo cửa sổ và renderer cho ứng dụng. Nó sử dụng SDL_Init() để khởi tạo SDL, sau đó tạo cửa sổ với SDL_CreateWindow() và renderer với SDL_CreateRenderer(). Cuối cùng, nó thiết lập kích thước của renderer và chất lượng tỉ lệ render.
-   -- close(): Phương thức này được sử dụng để giải phóng tài nguyên và đóng cửa sổ và renderer. Nó gọi SDL_DestroyWindow() và SDL_DestroyRenderer() để giải phóng cửa sổ và renderer, sau đó gọi SDL_Quit() để đóng SDL.
-   -- waitkeypressed(): Phương thức này được sử dụng để chờ người dùng nhấn một phím bất kỳ trên bàn phím. Nó chạy trong một vòng lặp vô hạn và sử dụng SDL_WaitEvent() để chờ sự kiện từ người dùng. Nếu sự kiện là nhấn phím hoặc thoát ứng dụng, vòng lặp sẽ thoát.
-   -- loadtexture(string path): Phương thức này được sử dụng để tải một texture từ tệp hình ảnh được chỉ định bởi path. Nó sử dụng IMG_LoadTexture() để tải texture từ renderer và trả về texture đã tải.
-   -- inside(int &x,int &y,SDL_Rect rect): Phương thức này được sử dụng để kiểm tra xem một điểm (x, y) có nằm trong một hình chữ nhật rect hay không. Nó kiểm tra xem điểm có nằm trong phạm vi x và y của hình chữ nhật hay không và trả về true nếu điểm nằm trong và false nếu không.
-   -- free(SDL_Texture* &texture): Phương thức này được sử dụng để giải phóng một texture đã được tải. Nó gọi SDL_DestroyTexture() để giải phóng texture và gán con trỏ texture thành nullptr.
-   -- blitRect(SDL_Texture *texture, SDL_Rect *src, int x, int y): Phương thức này được sử dụng để vẽ một phần của texture lên renderer tại vị trí (x, y). Nó tạo ra một SDL_Rect mới để xác định vị trí và kích thước của texture trên renderer và sử dụng SDL_RenderCopy() để sao chép texture lên renderer.
-   -- renderTexture(SDL_Texture *texture, int x, int y,int w,int h): Phương thức này được sử dụng để vẽ toàn bộ texture lên renderer tại vị trí (x, y) và kích thước (w, h). Nó sử dụng SDL_QueryTexture() để lấy kích thước của texture và sau đó sử dụng SDL_RenderCopy() để sao chép texture lên renderer.
+   - SDLInit(): Phương thức này được sử dụng để khởi tạo SDL và tạo cửa sổ và renderer cho ứng dụng. Nó sử dụng SDL_Init() để khởi tạo SDL, sau đó tạo cửa sổ với SDL_CreateWindow() và renderer với SDL_CreateRenderer(). Cuối cùng, nó thiết lập kích thước của renderer và chất lượng tỉ lệ render.
+   - close(): Phương thức này được sử dụng để giải phóng tài nguyên và đóng cửa sổ và renderer. Nó gọi SDL_DestroyWindow() và SDL_DestroyRenderer() để giải phóng cửa sổ và renderer, sau đó gọi SDL_Quit() để đóng SDL.
+   - waitkeypressed(): Phương thức này được sử dụng để chờ người dùng nhấn một phím bất kỳ trên bàn phím. Nó chạy trong một vòng lặp vô hạn và sử dụng SDL_WaitEvent() để chờ sự kiện từ người dùng. Nếu sự kiện là nhấn phím hoặc thoát ứng dụng, vòng lặp sẽ thoát.
+   - loadtexture(string path): Phương thức này được sử dụng để tải một texture từ tệp hình ảnh được chỉ định bởi path. Nó sử dụng IMG_LoadTexture() để tải texture từ renderer và trả về texture đã tải.
+   - inside(int &x,int &y,SDL_Rect rect): Phương thức này được sử dụng để kiểm tra xem một điểm (x, y) có nằm trong một hình chữ nhật rect hay không. Nó kiểm tra xem điểm có nằm trong phạm vi x và y của hình chữ nhật hay không và trả về true nếu điểm nằm trong và false nếu không.
+   - free(SDL_Texture* &texture): Phương thức này được sử dụng để giải phóng một texture đã được tải. Nó gọi SDL_DestroyTexture() để giải phóng texture và gán con trỏ texture thành nullptr.
+   - blitRect(SDL_Texture *texture, SDL_Rect *src, int x, int y): Phương thức này được sử dụng để vẽ một phần của texture lên renderer tại vị trí (x, y). Nó tạo ra một SDL_Rect mới để xác định vị trí và kích thước của texture trên renderer và sử dụng SDL_RenderCopy() để sao chép texture lên renderer.
+  - renderTexture(SDL_Texture *texture, int x, int y,int w,int h): Phương thức này được sử dụng để vẽ toàn bộ texture lên renderer tại vị trí (x, y) và kích thước (w, h). Nó sử dụng SDL_QueryTexture() để lấy kích thước của texture và sau đó sử dụng SDL_RenderCopy() để sao chép texture lên renderer.
 toado(SDL_Texture *texture, int x, int y,int w,int h): Phương thức này được sử dụng để tạo một đối tượng SDL_Rect đại diện cho vị trí và kích thước của texture trên renderer. Nó sử dụng SDL_QueryTexture() để lấy kích thước của texture và sau đó trả về một SDL_Rect với vị trí và kích thước đã được chia cho w và h.
 - **main.cpp**: Dùng để chạy trò chơi rắn.
 ## 4. Các nguồn tham khảo
@@ -90,6 +90,7 @@ link: https://www.youtube.com/watch?v=nK_sT12h22s&t=2969s
    -- Con rắn xuyên qua tường.
    -- Cải tiến các thao tác chơi, game ban đầu khi nhấn nhầm nút di chuyển sẽ out game luôn. Mình đã cải tiến để khi người chơi có lỡ ấn nhầm nút sẽ không out game luôn mà vẫn có thể tiếp tục chơi tiếp.
    -- Tốc độ của con rắn tăng lên khi nó ăn quả.
+  
 link: https://lazyfoo.net/tutorials/SDL/index.php
 Mình sử dụng lazyfoo học cách lập trình game, từ những khái niệm cơ bản như cấu trúc game loop, xử lý sự kiện, vẽ đồ họa, âm thanh và nhiều hơn nữa.
 ## 5. Những kiến thức học được.
@@ -106,3 +107,4 @@ Mình sử dụng lazyfoo học cách lập trình game, từ những khái ni�
 - Cách tách file
 - Sử lí sự kiện
 - Tạo menu, thanh công cụ.
+- Xử lí logic game
