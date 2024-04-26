@@ -17,18 +17,8 @@ Trong phiên bản này game rắn có một số tính năng đặc biệt:
 - Tăng tốc độ khi ăn quả: Khi con rắn ăn một quả, tốc độ di chuyển của nó sẽ tăng lên. Điều này khiến trò chơi trở nên kịch tính hơn khi bạn phải nhanh chóng phản ứng và điều khiển con rắn một cách khéo léo để tránh tự ăn vào đuôi của mình.
 - Mục tiêu của trò chơi: Mục tiêu của bạn là điều khiển con rắn ăn càng nhiều quả càng tốt để ghi điểm cao. Mỗi lần ăn một quả, con rắn sẽ dài ra và tốc độ của nó sẽ tăng lên, đòi hỏi bạn phải có kỹ năng phản xạ nhanh và lập kế hoạch di chuyển cẩn thận.
 Trò chơi rắn mang lại trải nghiệm đơn giản nhưng thú vị, với khả năng thử thách người chơi ở mọi cấp độ kỹ năng. Hãy thử thách bản thân và xem bạn có thể khiến con rắn của bạn dài bao nhiêu nhé!
-## Mục lục 
-- [0. Cách tải game](##0.Cách-tải-game)
-    * [0.1. Cách 1: Không bao gồm code.](#a-cách-1-không-bao-gồm-code)
-    * [0.2. Cách 2: Bao gồm code và có thể biên dịch.](#b-cách-2-bao-gồm-code-và-có-thể-biên-dịch)
-- [1. Bắt đầu game](#1bắt-đầu-game)
-- [2. Các thành phần trong game:](#2-các-thành-phần-trong-game)
-- [4. Cách chơi](#4-cách-chơi)
-    * [a. Các loại cây](#acác-loại-cây)
-    * [b. Các loại zombie](#bcác-loại-zombie)
-- [5. Chiến thắng và thất bại](#5-chiến-thắng-và-thất-bại)
-- [Về đồ họa của game:](#về-đồ-họa-của-game)
-- [Về source code game](#về-source-code-game)
+
+  
 ## 0.Cách tải game 
 Tải file nén: Cách này tiết kiệm bộ nhớ và thời gian tải đi rất nhiều (khoảng 20.7MB).
 + Tải game (được nén thành .zip) tại link sau: https://github.com/Khanhlywan/snake/blob/main/Snake.zip, hoặc Chọn Code -> Download zipzip
@@ -102,7 +92,7 @@ link: https://www.youtube.com/watch?v=nK_sT12h22s&t=2969s
    -- Tốc độ của con rắn tăng lên khi nó ăn quả.
 link: https://lazyfoo.net/tutorials/SDL/index.php
 Mình sử dụng lazyfoo học cách lập trình game, từ những khái niệm cơ bản như cấu trúc game loop, xử lý sự kiện, vẽ đồ họa, âm thanh và nhiều hơn nữa.
-## 5. Những kiến thức học được sau khi làm bài tập lớn.
+## 5. Những kiến thức học được.
 - Tìm hiểu về SDL 2.0:
   - SDL_TTF.
   - SDL_Mixer.
